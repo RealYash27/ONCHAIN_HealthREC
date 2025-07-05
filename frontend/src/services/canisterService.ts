@@ -22,7 +22,7 @@ if (import.meta.env.MODE === 'development') {
   });
 }
 
-const actor = createActor(agent);
+const actor = createActor();
 
 export const addPatient = async (patient: Omit<Patient, 'id'>): Promise<void> => {
   try {
