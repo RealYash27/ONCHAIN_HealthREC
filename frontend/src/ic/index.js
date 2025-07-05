@@ -1,17 +1,15 @@
 import { HttpAgent, Actor } from "@dfinity/agent";
-import { idlFactory, canisterId as defaultCanisterId } from "../../../src/declarations/icp_rust_boilerplate_backend";
+import { idlFactory } from "../../../src/declarations/icp_rust_boilerplate_backend";
+
+// ✅ Assign the canister ID from env AFTER the imports
+const defaultCanisterId = import.meta.env.VITE_CANISTER_ID_ICP_RUST_BOILERPLATE_BACKEND;
 
 console.log("🧪 Canister ID at runtime:", defaultCanisterId);
 console.log("🔎 Raw ENV value:", import.meta.env.VITE_CANISTER_ID_ICP_RUST_BOILERPLATE_BACKEND);
 
-
-// Export reusable createActor
 export function createActor(canisterId = defaultCanisterId) {
-  const agent = new HttpAgent({
-    host: "http://127.0.0.1:4943",
-  });
+  const agent = new HttpAgent({ host: "http://127.0.0.1:4943" });
 
-  // Correct Vite-compatible check for development mode
   if (import.meta.env.MODE === "development") {
     agent.fetchRootKey().catch((err) => {
       console.warn("Unable to fetch root key. Is the local replica running?");
@@ -25,5 +23,5 @@ export function createActor(canisterId = defaultCanisterId) {
   });
 }
 
-// Optional: Keep default backend instance
+// Optional: default backend instance
 export const backend = createActor();
