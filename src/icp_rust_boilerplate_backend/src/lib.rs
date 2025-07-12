@@ -5,7 +5,8 @@ extern crate serde;
 use serde::{Serialize, Deserialize}; // ✅ THIS IS MISSING
 use candid::{Decode, Encode};
 use ic_cdk::api::time;
-
+use ic_cdk_macros::*;
+use std::convert::TryInto;
 use ic_stable_structures::memory_manager::{MemoryId, MemoryManager, VirtualMemory};
 use ic_stable_structures::{BoundedStorable, Cell, DefaultMemoryImpl, StableBTreeMap, Storable};
 use std::{borrow::Cow, cell::RefCell};
@@ -337,4 +338,25 @@ mod tests {
 }
 
 
+#[ic_cdk::query]
+fn view_medical_history_by_name(name: String) -> String {
+    STORAGE_PATIENT.with(|s| {
+        s.borrow()
+            .iter()
+            .find(|(_, p)| p.patient_name == name)
+            .map(|(_, p)| p.patient_history.clone())
+            .unwrap_or_else(|| "No record found.".to_string())
+    })
+}
 
+#[ic_cdk::query]
+fn patient_count() -> usize {
+    STORAGE_PATIENT.with(|s| s.borrow().len().try_into().unwrap())
+}
+
+#[ic_cdk::query]
+fn in_clinic_patient_count() -> usize {
+    STORAGE_PATIENT.with(|s| {
+        s.borrow().iter().filter(|(_, p)| p.in_clinic).count()
+    })
+}

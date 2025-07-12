@@ -3,7 +3,7 @@ cd frontend,
 then npm install 
 
 then onto root folder, 
-do dfx start --clean
+do dfx start --clean --background
 then, 
 
 dfx canister create icp_rust_boilerplate_backend
