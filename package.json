@@ -1,0 +1,8 @@
+{
+  "scripts": {
+  "generate": "./did.sh && dfx generate",
+  "build": "cd frontend && npm install && npm run build",
+  "gen-deploy": "npm run build && dfx deploy --yes"
+}
+
+}
